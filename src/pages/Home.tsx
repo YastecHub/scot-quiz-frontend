@@ -274,13 +274,13 @@ export default function Home() {
 
                 <div className="founder-details-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--green-light)', marginBottom: 8 }}>Teaches</div>
+                    <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--green-light)', marginBottom: 8 }}>Academic Profile</div>
                     {['Physics · UTME, WAEC, JUPEB', 'Mathematics · UTME, WAEC, JUPEB', 'Chemistry · UTME, WAEC, JUPEB'].map(s => (
                       <div key={s} style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-mid)', marginBottom: 6, paddingLeft: 10, borderLeft: '2px solid var(--green-pale)' }}>{s}</div>
                     ))}
                   </div>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--green-light)', marginBottom: 8 }}>Leadership</div>
+                    <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--green-light)', marginBottom: 8 }}>Leadership Profile</div>
                     {['Pre-Med Governor, UNILAG', 'Founder, SCOT Online Tutorial', 'CEO, EduRaj Consult'].map(s => (
                       <div key={s} style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-mid)', marginBottom: 6, paddingLeft: 10, borderLeft: '2px solid var(--green-pale)' }}>{s}</div>
                     ))}

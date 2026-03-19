@@ -87,6 +87,15 @@ export interface ReviewQuestion extends Question {
   student_correct: number;
 }
 
+export interface Student {
+  id: number;
+  name: string;
+  email: string;
+  created_at: string;
+  tests_taken: number;
+  avg_pct: number | null;
+}
+
 // ── Auth ─────────────────────────────────────────────────────
 export const authAPI = {
   register: (name: string, email: string, password: string) =>
@@ -175,7 +184,7 @@ export const adminAPI = {
     api.get(`/admin/tests/${testId}/export.pdf`, { responseType: 'blob' }),
 
   // Students
-  getStudents: () => api.get('/admin/students'),
+  getStudents: () => api.get<Student[]>('/admin/students'),
 
   // Resources
   getResources: () => api.get<Resource[]>('/admin/resources'),

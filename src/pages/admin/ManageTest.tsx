@@ -45,14 +45,14 @@ export default function ManageTest() {
     ]).then(([tests, tqs, bqs]) => {
       const found = tests.data.find((t: Test) => t.id === testId);
       setTest(found ?? null);
-      setTestQs(tqs.data);
-      setBankQs(bqs.data);
+      setTestQs(Array.isArray(tqs.data) ? tqs.data : []);
+      setBankQs(Array.isArray(bqs.data) ? bqs.data : []);
     }).finally(() => setLoading(false));
   }, [testId]);
 
   const refreshBank = async () => {
     const res = await adminAPI.getQuestions(bankSubject);
-    setBankQs(res.data);
+    setBankQs(Array.isArray(res.data) ? res.data : []);
   };
 
   useEffect(() => { refreshBank(); }, [bankSubject]);
@@ -62,7 +62,7 @@ export default function ManageTest() {
   const addToTest = async (qId: number) => {
     await adminAPI.addQuestionsToTest(testId, [qId]);
     const res = await adminAPI.getTestQuestions(testId);
-    setTestQs(res.data);
+    setTestQs(Array.isArray(res.data) ? res.data : []);
   };
 
   const removeFromTest = async (qId: number) => {
@@ -81,7 +81,8 @@ export default function ManageTest() {
       // Add to test automatically
       await adminAPI.addQuestionsToTest(testId, [res.data.id]);
       const [tqRes, bqRes] = await Promise.all([adminAPI.getTestQuestions(testId), adminAPI.getQuestions(bankSubject)]);
-      setTestQs(tqRes.data); setBankQs(bqRes.data);
+      setTestQs(Array.isArray(tqRes.data) ? tqRes.data : []); 
+      setBankQs(Array.isArray(bqRes.data) ? bqRes.data : []);
       // Reset form
       setNQuestion(''); setNOptions(['','','','']); setNAnswer(0); setNExpl(''); setNSource(''); setNTopic('');
       setShowForm(false);

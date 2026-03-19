@@ -19,7 +19,7 @@ export default function StudentTests() {
 
   useEffect(() => {
     attemptsAPI.listTests()
-      .then(res => setTests(res.data))
+      .then(res => setTests(Array.isArray(res.data) ? res.data : []))
       .catch(() => setError('Could not load tests. Make sure the backend is running.'))
       .finally(() => setLoading(false));
   }, []);

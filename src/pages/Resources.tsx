@@ -19,8 +19,8 @@ export default function Resources() {
       resourcesAPI.getAll(subject),
     ])
       .then(([topicsRes, resourcesRes]) => {
-        setTopics(topicsRes.data);
-        setResources(resourcesRes.data);
+        setTopics(Array.isArray(topicsRes.data) ? topicsRes.data : []);
+        setResources(Array.isArray(resourcesRes.data) ? resourcesRes.data : []);
       })
       .catch(() => setError('Could not load resources. Make sure the backend is running.'))
       .finally(() => setLoading(false));

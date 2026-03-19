@@ -44,7 +44,7 @@ export default function AdminResources() {
 
   const loadResources = async () => {
     const res = await adminAPI.getResources();
-    setResources(res.data);
+    setResources(Array.isArray(res.data) ? res.data : []);
   };
 
   useEffect(() => {

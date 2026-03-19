@@ -10,7 +10,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     Promise.all([adminAPI.getTests(), adminAPI.getStudents()])
-      .then(([t, s]) => { setTests(t.data); setStudents(s.data); })
+      .then(([t, s]) => { 
+        setTests(Array.isArray(t.data) ? t.data : []);
+        setStudents(Array.isArray(s.data) ? s.data : []);
+      })
       .finally(() => setLoading(false));
   }, []);
 

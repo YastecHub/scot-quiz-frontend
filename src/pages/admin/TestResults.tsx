@@ -14,7 +14,10 @@ export default function TestResults() {
 
   useEffect(() => {
     adminAPI.getResults(Number(id))
-      .then(res => { setTest(res.data.test); setResults(res.data.results); })
+      .then(res => { 
+        setTest(res.data.test); 
+        setResults(Array.isArray(res.data.results) ? res.data.results : []);
+      })
       .finally(() => setLoading(false));
   }, [id]);
 

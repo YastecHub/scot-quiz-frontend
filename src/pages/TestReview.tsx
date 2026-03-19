@@ -28,7 +28,11 @@ export default function TestReview() {
 
   useEffect(() => {
     attemptsAPI.review(id)
-      .then(res => { setTest(res.data.test); setAttempt(res.data.attempt); setQuestions(res.data.questions); })
+      .then(res => { 
+        setTest(res.data.test); 
+        setAttempt(res.data.attempt); 
+        setQuestions(Array.isArray(res.data.questions) ? res.data.questions : []);
+      })
       .catch(() => navigate('/tests', { replace: true }))
       .finally(() => setLoading(false));
   }, [id, navigate]);

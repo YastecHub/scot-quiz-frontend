@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Settings, X, Menu } from 'lucide-react';
+import { Settings, X, Menu, GraduationCap } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -42,9 +42,8 @@ export default function Navbar() {
           <div style={{
             width: 40, height: 40, background: 'var(--green-deep)', borderRadius: 11,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: 'Fraunces, serif', fontSize: 18, color: '#fff',
             boxShadow: '0 4px 12px rgba(10,61,31,0.25)', flexShrink: 0,
-          }}>S</div>
+          }}><GraduationCap size={22} color="#fff" strokeWidth={2} /></div>
           <div>
             <div style={{ fontFamily: 'Fraunces, serif', fontSize: 19, fontWeight: 700, color: 'var(--green-deep)', lineHeight: 1 }}>
               SCOT COMPREHENSIVE CLASSES

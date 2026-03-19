@@ -38,7 +38,7 @@ export default function TakeTest() {
         }
         setAttempt(a);
         setTest(t);
-        setQuestions(qs);
+        setQuestions(Array.isArray(qs) ? qs : []);
         setTimeLeft(time_remaining);
         setAnswers(saved_answers ?? {});
       })

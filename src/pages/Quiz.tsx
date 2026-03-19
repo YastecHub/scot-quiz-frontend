@@ -32,7 +32,7 @@ export default function Quiz() {
     setError('');
     try {
       const res = await quizAPI.getQuestions(sub);
-      setQuestions(res.data);
+      setQuestions(Array.isArray(res.data) ? res.data : []);
       setIdx(0);
       setAnswered(false);
       setChosen(null);

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Atom, FlaskConical, Dna, BookOpen, Zap, Pin, Target, BarChart2, BookMarked, Smartphone, Phone, Mail, type LucideIcon } from 'lucide-react';
+import { Atom, FlaskConical, Dna, BookOpen, Zap, Pin, Target, BarChart2, BookMarked, Smartphone, Phone, Mail, GraduationCap, type LucideIcon } from 'lucide-react';
 
 const SUBJECTS: { Icon: LucideIcon; name: string; desc: string; questions: string; topics: number }[] = [
   { Icon: Atom,          name: 'Physics',   desc: 'Waves · Optics · Atomic Models · Electromagnetism · Mechanics', questions: '40+', topics: 4 },
@@ -341,7 +341,7 @@ export default function Home() {
           <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 40, paddingBottom: 36, borderBottom: '1px solid rgba(255,255,255,0.08)', marginBottom: 28 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 36, height: 36, background: 'rgba(255,255,255,0.1)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Fraunces, serif', fontSize: 16, color: '#fff' }}>S</div>
+                <div style={{ width: 36, height: 36, background: 'rgba(255,255,255,0.1)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><GraduationCap size={20} color="#fff" strokeWidth={2} /></div>
                 <div>
                   <div style={{ fontFamily: 'Fraunces, serif', fontSize: 19, fontWeight: 700, color: '#fff' }}>SCOT COMPREHENSIVE CLASSES</div>
                   <div style={{ fontSize: 9, letterSpacing: 0, textTransform: 'none', color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>by EduRaj Consult</div>

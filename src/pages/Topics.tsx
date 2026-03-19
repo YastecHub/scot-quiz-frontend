@@ -21,7 +21,7 @@ export default function Topics() {
     loadedRef.current.add(activeSubject);
     setLoading(true);
     topicsAPI.getBySubject(activeSubject)
-      .then(res => setTopicsBySubject(prev => ({ ...prev, [activeSubject]: res.data })))
+      .then(res => setTopicsBySubject(prev => ({ ...prev, [activeSubject]: Array.isArray(res.data) ? res.data : [] })))
       .catch(() => { loadedRef.current.delete(activeSubject); })
       .finally(() => setLoading(false));
   }, [activeSubject]);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Settings, X, Menu } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -65,7 +66,8 @@ export default function Navbar() {
               ...navLinkStyle({ isActive }),
               background: isActive ? 'var(--green-deep)' : 'rgba(10,61,31,0.07)',
               color: isActive ? '#fff' : 'var(--green-mid)',
-            })}>⚙ Admin</NavLink>
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+            })}><Settings size={13} /> Admin</NavLink>
           ) : null}
 
           <div style={{ width: 1, height: 28, background: 'rgba(10,61,31,0.1)', margin: '0 8px' }} />
@@ -102,7 +104,7 @@ export default function Navbar() {
           className="mobile-menu-btn"
           aria-label="Menu"
         >
-          {menuOpen ? '✕' : '☰'}
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
 
@@ -117,7 +119,7 @@ export default function Navbar() {
             { to: '/quiz',      label: 'Practice' },
             { to: '/topics',    label: 'Topics' },
             { to: '/resources', label: 'Resources' },
-            ...(user?.is_admin ? [{ to: '/admin', label: '⚙ Admin' }] : []),
+            ...(user?.is_admin ? [{ to: '/admin', label: <span style={{display:'inline-flex',alignItems:'center',gap:5}}><Settings size={14}/> Admin</span> }] : []),
           ].map(item => (
             <NavLink
               key={item.to}

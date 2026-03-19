@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { resourcesAPI, topicsAPI, type Resource, type Topic } from '../api/client';
+import { Inbox, BookOpen, FileText } from 'lucide-react';
 
 const SUBJECTS = ['Physics', 'Chemistry', 'Biology', 'English', 'Mathematics'];
 
@@ -71,7 +72,7 @@ export default function Resources() {
 
       {!loading && !error && topics.length === 0 && (
         <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
+          <div style={{ marginBottom: 12 }}><Inbox size={40} color="var(--text-muted)" /></div>
           <p style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>No topics listed for {subject} yet.</p>
           <p style={{ fontSize: 13 }}>Check back soon!</p>
         </div>
@@ -143,7 +144,7 @@ export default function Resources() {
                       transition: 'all 0.18s', whiteSpace: 'nowrap',
                     }}
                   >
-                    📖 SCOT Note
+                    <BookOpen size={12} /> SCOT Note
                   </button>
 
                   <button
@@ -162,7 +163,7 @@ export default function Resources() {
                       transition: 'all 0.18s', whiteSpace: 'nowrap',
                     }}
                   >
-                    📝 Past Q's
+                    <FileText size={12} /> Past Q's
                   </button>
                 </div>
               </div>

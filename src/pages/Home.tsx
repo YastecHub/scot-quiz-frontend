@@ -1,19 +1,20 @@
 import { Link } from 'react-router-dom';
+import { Atom, FlaskConical, Dna, BookOpen, Zap, Pin, Target, BarChart2, BookMarked, Smartphone, Phone, Mail, type LucideIcon } from 'lucide-react';
 
-const SUBJECTS = [
-  { emoji: '⚛️', name: 'Physics',   desc: 'Waves · Optics · Atomic Models · Electromagnetism · Mechanics', questions: '40+', topics: 4 },
-  { emoji: '🧪', name: 'Chemistry', desc: 'Redox · Ionic Theory · Periodic Table · Organic · Equilibrium',  questions: '40+', topics: 4 },
-  { emoji: '🧬', name: 'Biology',   desc: 'Cell Biology · Genetics · Ecology · Nutrition · Human Systems',  questions: '40+', topics: 4 },
-  { emoji: '📖', name: 'English',   desc: 'Comprehension · Grammar · Figures of Speech · Vocabulary',       questions: '40+', topics: 3 },
+const SUBJECTS: { Icon: LucideIcon; name: string; desc: string; questions: string; topics: number }[] = [
+  { Icon: Atom,          name: 'Physics',   desc: 'Waves · Optics · Atomic Models · Electromagnetism · Mechanics', questions: '40+', topics: 4 },
+  { Icon: FlaskConical,  name: 'Chemistry', desc: 'Redox · Ionic Theory · Periodic Table · Organic · Equilibrium',  questions: '40+', topics: 4 },
+  { Icon: Dna,           name: 'Biology',   desc: 'Cell Biology · Genetics · Ecology · Nutrition · Human Systems',  questions: '40+', topics: 4 },
+  { Icon: BookOpen,      name: 'English',   desc: 'Comprehension · Grammar · Figures of Speech · Vocabulary',       questions: '40+', topics: 3 },
 ];
 
-const FEATURES = [
-  { icon: '⚡', title: 'Daily Mock Quizzes',      desc: 'Fresh randomised questions every session across all four subjects. Timed conditions that mirror JAMB and WAEC.' },
-  { icon: '📌', title: 'Instant Explanations',    desc: 'Every question shows a detailed explanation with the past-exam year reference so you learn why, not just what.' },
-  { icon: '🎯', title: 'Topic-by-Topic Practice', desc: 'Struggling with Waves or Redox? Drill a specific topic until you master it before moving on.' },
-  { icon: '📊', title: 'Score Tracking',          desc: 'Your progress is saved after every session. Watch your accuracy improve as you practice daily.' },
-  { icon: '📚', title: 'Downloadable Resources',  desc: 'Past question papers, summary notes and revision sheets ready for offline study.' },
-  { icon: '📱', title: 'Works on Any Phone',      desc: 'Beautifully responsive on every device. Practice on the bus, during break, or at home.' },
+const FEATURES: { Icon: LucideIcon; title: string; desc: string }[] = [
+  { Icon: Zap,        title: 'Daily Mock Quizzes',      desc: 'Fresh randomised questions every session across all four subjects. Timed conditions that mirror JAMB and WAEC.' },
+  { Icon: Pin,        title: 'Instant Explanations',    desc: 'Every question shows a detailed explanation with the past-exam year reference so you learn why, not just what.' },
+  { Icon: Target,     title: 'Topic-by-Topic Practice', desc: 'Struggling with Waves or Redox? Drill a specific topic until you master it before moving on.' },
+  { Icon: BarChart2,  title: 'Score Tracking',          desc: 'Your progress is saved after every session. Watch your accuracy improve as you practice daily.' },
+  { Icon: BookMarked, title: 'Downloadable Resources',  desc: 'Past question papers, summary notes and revision sheets ready for offline study.' },
+  { Icon: Smartphone, title: 'Works on Any Phone',      desc: 'Beautifully responsive on every device. Practice on the bus, during break, or at home.' },
 ];
 
 export default function Home() {
@@ -23,7 +24,6 @@ export default function Home() {
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px 64px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }} className="hero-grid">
         <div>
           <div className="section-badge animate-fadeUp" style={{ marginBottom: 24 }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block', animation: 'pulse 2s infinite' }} />
             JAMB · WAEC · NECO · 2026
           </div>
 
@@ -141,8 +141,8 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }} className="features-grid">
           {FEATURES.map(f => (
             <div key={f.title} className="card feature-card-hover" style={{ padding: '28px 24px', position: 'relative', overflow: 'hidden', transition: 'all 0.25s' }}>
-              <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, marginBottom: 18 }}>
-                {f.icon}
+              <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                <f.Icon size={22} color="var(--green-mid)" />
               </div>
               <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--green-deep)', marginBottom: 8 }}>{f.title}</div>
               <div style={{ fontSize: 13.5, color: 'var(--text-mid)', lineHeight: 1.65, fontWeight: 500 }}>{f.desc}</div>
@@ -179,7 +179,7 @@ export default function Home() {
                 onMouseEnter={e => { const el = e.currentTarget; el.style.background='rgba(255,255,255,0.11)'; el.style.borderColor='rgba(0,230,118,0.3)'; el.style.transform='translateY(-4px)'; }}
                 onMouseLeave={e => { const el = e.currentTarget; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; el.style.transform='translateY(0)'; }}
               >
-                <span style={{ fontSize: 36, marginBottom: 14, display: 'block' }}>{s.emoji}</span>
+                <span style={{ marginBottom: 14, display: 'flex', justifyContent: 'center' }}><s.Icon size={36} color="rgba(255,255,255,0.85)" /></span>
                 <div style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{s.name}</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 600, lineHeight: 1.5, marginBottom: 16 }}>{s.desc}</div>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 20 }}>
@@ -253,7 +253,7 @@ export default function Home() {
                       const el = e.currentTarget;
                       el.style.display = 'none';
                       const parent = el.parentElement!;
-                      parent.innerHTML = '<span style="font-size:54px">👨‍⚕️</span>';
+                      parent.innerHTML = '<span style="font-size:54px;color:var(--green-mid)">?</span>';
                     }}
                   />
                 </div>
@@ -292,7 +292,7 @@ export default function Home() {
                      style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', borderRadius: 12, padding: '10px 16px', textDecoration: 'none', fontSize: 13, fontWeight: 700, color: 'var(--green-mid)', transition: 'all 0.18s' }}
                      onMouseEnter={e => { const el = e.currentTarget; el.style.background = 'var(--green-pale)'; el.style.color = 'var(--green-deep)'; }}
                      onMouseLeave={e => { const el = e.currentTarget; el.style.background = 'var(--green-ghost)'; el.style.color = 'var(--green-mid)'; }}>
-                    📞 08149425466
+                    <Phone size={14} /> 08149425466
                   </a>
                   <a href="https://wa.me/message/XDTHP6H2VPI6L1" target="_blank" rel="noopener noreferrer"
                      style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#dcfce7', border: '1.5px solid #86efac', borderRadius: 12, padding: '10px 16px', textDecoration: 'none', fontSize: 13, fontWeight: 700, color: '#15803d', transition: 'all 0.18s' }}
@@ -305,7 +305,7 @@ export default function Home() {
                      style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'var(--off-white)', border: '1.5px solid rgba(10,61,31,0.12)', borderRadius: 12, padding: '10px 16px', textDecoration: 'none', fontSize: 13, fontWeight: 700, color: 'var(--text-mid)', transition: 'all 0.18s' }}
                      onMouseEnter={e => { const el = e.currentTarget; el.style.background = 'var(--green-ghost)'; el.style.color = 'var(--green-mid)'; }}
                      onMouseLeave={e => { const el = e.currentTarget; el.style.background = 'var(--off-white)'; el.style.color = 'var(--text-mid)'; }}>
-                    ✉ Email
+                    <Mail size={14} /> Email
                   </a>
                 </div>
               </div>
@@ -350,8 +350,8 @@ export default function Home() {
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginTop: 14, maxWidth: 240, lineHeight: 1.6 }}>
                 Empowering every Nigerian student with the tools to ace JAMB, WAEC & NECO.
               </p>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 8, fontWeight: 600 }}>
-                📞 08149425466
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 8, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Phone size={13} /> 08149425466
               </p>
             </div>
             <div style={{ display: 'flex', gap: 56, flexWrap: 'wrap' }}>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { adminAPI, type Test, type AttemptResult } from '../../api/client';
+import { BarChart2, Medal, Download, Inbox } from 'lucide-react';
 
 export default function TestResults() {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +32,11 @@ export default function TestResults() {
     } finally { setExporting(false); }
   };
 
-  const medal = (rank: number) => rank === 0 ? '🥇' : rank === 1 ? '🥈' : rank === 2 ? '🥉' : `${rank + 1}`;
+  const medal = (rank: number) =>
+    rank === 0 ? <Medal size={20} color="#f59e0b" /> :
+    rank === 1 ? <Medal size={20} color="#94a3b8" /> :
+    rank === 2 ? <Medal size={20} color="#cd7c3a" /> :
+    `${rank + 1}`;
   const pctColor = (p: number) => p >= 70 ? 'var(--correct)' : p >= 50 ? '#ca8a04' : 'var(--wrong)';
 
   return (
@@ -47,7 +52,7 @@ export default function TestResults() {
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 14, marginBottom: 32 }}>
             <div>
-              <div className="section-badge" style={{ marginBottom: 10 }}>📊 Results</div>
+              <div className="section-badge" style={{ marginBottom: 10, display: 'inline-flex', alignItems: 'center', gap: 6 }}><BarChart2 size={12} /> Results</div>
               <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 28, fontWeight: 700, color: 'var(--green-deep)', marginBottom: 6 }}>{test.title}</h1>
               <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>
                 {test.subject ?? 'Mixed'} · {test.time_limit} min · {results.length} submission{results.length !== 1 ? 's' : ''}
@@ -56,7 +61,7 @@ export default function TestResults() {
             <div style={{ display: 'flex', gap: 10 }}>
               <Link to={`/admin/tests/${id}/manage`} className="btn btn-secondary btn-sm">Edit Test</Link>
               <button type="button" onClick={handleExport} disabled={exporting} className="btn btn-primary btn-sm" style={{ opacity: exporting ? 0.7 : 1 }}>
-                {exporting ? 'Generating…' : '⬇ Export PDF'}
+                {exporting ? 'Generating…' : <span style={{display:'inline-flex',alignItems:'center',gap:6}}><Download size={13}/> Export PDF</span>}
               </button>
             </div>
           </div>
@@ -81,7 +86,7 @@ export default function TestResults() {
           {/* Results table */}
           {results.length === 0 ? (
             <div className="card" style={{ padding: '48px 24px', textAlign: 'center' }}>
-              <div style={{ fontSize: 40, marginBottom: 14 }}>📭</div>
+              <div style={{ marginBottom: 14 }}><Inbox size={40} color="var(--text-muted)" /></div>
               <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--green-deep)', marginBottom: 8 }}>No submissions yet</p>
               <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Students have not completed this test yet.</p>
             </div>

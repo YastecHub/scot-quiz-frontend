@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Clock } from 'lucide-react';
 
 interface TimerProps {
   seconds: number;          // initial seconds remaining
@@ -44,7 +45,7 @@ export default function Timer({ seconds: initialSeconds, onExpire, warningAt = 6
       borderRadius: 12, padding: '8px 14px',
       animation: isUrgent ? 'pulse 0.8s infinite' : 'none',
     }}>
-      <span style={{ fontSize: 14 }}>⏱</span>
+      <Clock size={14} color={color} />
       <span style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 700, color, lineHeight: 1, letterSpacing: 1 }}>
         {fmt}
       </span>

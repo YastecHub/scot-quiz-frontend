@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { adminAPI, type Test } from '../../api/client';
+import { Settings, FolderOpen, ClipboardList } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [tests, setTests]       = useState<Test[]>([]);
@@ -33,14 +34,14 @@ export default function AdminDashboard() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 36, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <div className="section-badge" style={{ marginBottom: 10 }}>⚙ Admin Panel</div>
+          <div className="section-badge" style={{ marginBottom: 10, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Settings size={12} /> Admin Panel</div>
           <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 32, fontWeight: 700, color: 'var(--green-deep)' }}>Dashboard</h1>
           <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 6, fontWeight: 500 }}>
             Manage tests, questions, and view student results.
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <Link to="/admin/resources" className="btn btn-secondary btn-md">📁 Resources</Link>
+          <Link to="/admin/resources" className="btn btn-secondary btn-md" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FolderOpen size={13} /> Resources</Link>
           <Link to="/admin/tests/new" className="btn btn-primary btn-md">+ Create New Test</Link>
         </div>
       </div>
@@ -71,7 +72,7 @@ export default function AdminDashboard() {
 
         {!loading && tests.length === 0 && (
           <div className="card" style={{ padding: '48px 24px', textAlign: 'center' }}>
-            <div style={{ fontSize: 40, marginBottom: 14 }}>📋</div>
+            <div style={{ marginBottom: 14 }}><ClipboardList size={40} color="var(--text-muted)" /></div>
             <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--green-deep)', marginBottom: 8 }}>No tests yet</p>
             <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>Create your first test to get started.</p>
             <Link to="/admin/tests/new" className="btn btn-primary btn-md">Create Test</Link>

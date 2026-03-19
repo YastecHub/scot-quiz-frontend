@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { quizAPI, scoresAPI, type Question } from '../api/client';
+import { Pin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ProgressBar from '../components/ProgressBar';
 import ScoreStrip from '../components/ScoreStrip';
@@ -251,7 +252,7 @@ export default function Quiz() {
               {/* Explanation */}
               {answered && (
                 <div style={{ margin: '0 20px 16px', background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', borderLeft: '4px solid var(--green-light)', borderRadius: 12, padding: '13px 15px', animation: 'fadeSlide 0.3s ease' }}>
-                  <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--green-mid)', marginBottom: 6 }}>📌 Explanation</div>
+                  <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--green-mid)', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 5 }}><Pin size={10} /> Explanation</div>
                   <div style={{ fontSize: 12.5, color: 'var(--text-mid)', lineHeight: 1.65 }}>
                     {questions[idx].explanation}
                     {questions[idx].exam_source && (

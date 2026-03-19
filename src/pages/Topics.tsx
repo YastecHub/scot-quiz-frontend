@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { topicsAPI, type Topic } from '../api/client';
+import { Atom, FlaskConical, Dna, BookOpen, Shuffle, Inbox, type LucideIcon } from 'lucide-react';
 
 const SUBJECTS = ['Physics', 'Chemistry', 'Biology', 'English'];
 
-const SUBJECT_EMOJIS: Record<string, string> = {
-  Physics: '⚛️', Chemistry: '🧪', Biology: '🧬', English: '📖',
+const SUBJECT_ICONS: Record<string, LucideIcon> = {
+  Physics: Atom, Chemistry: FlaskConical, Biology: Dna, English: BookOpen,
 };
 
 export default function Topics() {
@@ -26,6 +27,7 @@ export default function Topics() {
   }, [activeSubject]);
 
   const topics = topicsBySubject[activeSubject] || [];
+  const ActiveSubjectIcon = SUBJECT_ICONS[activeSubject];
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px 80px' }}>
@@ -43,25 +45,29 @@ export default function Topics() {
 
       {/* Subject Tabs */}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-        {SUBJECTS.map(sub => (
-          <button
-            key={sub}
-            onClick={() => setActiveSubject(sub)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              background: activeSubject === sub ? 'var(--green-deep)' : '#fff',
-              color: activeSubject === sub ? '#fff' : 'var(--text-muted)',
-              border: activeSubject === sub ? '1.5px solid var(--green-deep)' : '1.5px solid rgba(10,61,31,0.12)',
-              borderRadius: 20, padding: '9px 20px', cursor: 'pointer',
-              fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 12, fontWeight: 700,
-              letterSpacing: 0.5, transition: 'all 0.2s',
-              boxShadow: activeSubject === sub ? '0 4px 12px rgba(10,61,31,0.2)' : '0 1px 4px rgba(0,0,0,0.05)',
-            }}
-          >
-            <span>{SUBJECT_EMOJIS[sub]}</span>
-            {sub}
-          </button>
-        ))}
+        {SUBJECTS.map(sub => {
+          const TabIcon = SUBJECT_ICONS[sub];
+          return (
+            <button
+              key={sub}
+              type="button"
+              onClick={() => setActiveSubject(sub)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                background: activeSubject === sub ? 'var(--green-deep)' : '#fff',
+                color: activeSubject === sub ? '#fff' : 'var(--text-muted)',
+                border: activeSubject === sub ? '1.5px solid var(--green-deep)' : '1.5px solid rgba(10,61,31,0.12)',
+                borderRadius: 20, padding: '9px 20px', cursor: 'pointer',
+                fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 12, fontWeight: 700,
+                letterSpacing: 0.5, transition: 'all 0.2s',
+                boxShadow: activeSubject === sub ? '0 4px 12px rgba(10,61,31,0.2)' : '0 1px 4px rgba(0,0,0,0.05)',
+              }}
+            >
+              <TabIcon size={14} />
+              {sub}
+            </button>
+          );
+        })}
       </div>
 
       {/* Topics grid */}
@@ -70,7 +76,7 @@ export default function Topics() {
       {!loading && topics.length > 0 && (
         <>
           <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 22 }}>{SUBJECT_EMOJIS[activeSubject]}</span>
+            <ActiveSubjectIcon size={22} color="var(--green-mid)" />
             <div>
               <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 22, fontWeight: 700, color: 'var(--green-deep)', lineHeight: 1 }}>{activeSubject}</h2>
               <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, marginTop: 3 }}>{topics.length} topics available</p>
@@ -102,8 +108,8 @@ export default function Topics() {
                       <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>{activeSubject}</span>
                     </div>
                   </div>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                    {SUBJECT_EMOJIS[activeSubject]}
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <ActiveSubjectIcon size={18} color="var(--green-mid)" />
                   </div>
                 </div>
 
@@ -121,7 +127,7 @@ export default function Topics() {
               onMouseEnter={e => { const el = e.currentTarget; el.style.transform='translateY(-4px)'; el.style.background='var(--green-mid)'; }}
               onMouseLeave={e => { const el = e.currentTarget; el.style.transform='translateY(0)'; el.style.background='var(--green-deep)'; }}
             >
-              <div style={{ fontSize: 22, marginBottom: 12 }}>🔀</div>
+              <div style={{ marginBottom: 12 }}><Shuffle size={22} color="rgba(255,255,255,0.85)" /></div>
               <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Mixed Practice</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: 500, marginBottom: 16, lineHeight: 1.5 }}>
                 All topics shuffled together — the real exam experience.
@@ -136,7 +142,7 @@ export default function Topics() {
 
       {!loading && topics.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>📭</div>
+          <div style={{ marginBottom: 12 }}><Inbox size={32} color="var(--text-muted)" /></div>
           <p style={{ fontSize: 14, fontWeight: 600 }}>No topics found for {activeSubject}.<br />Make sure the backend is running.</p>
         </div>
       )}

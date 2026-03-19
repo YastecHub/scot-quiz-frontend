@@ -34,7 +34,7 @@ export default function Home() {
           </h1>
 
           <p className="animate-fadeUp delay-2" style={{ fontSize: 16, fontWeight: 500, color: 'var(--text-mid)', lineHeight: 1.7, marginBottom: 36, maxWidth: 460 }}>
-            Daily mock quizzes, past-question practice, and topic-by-topic breakdownsbuilt specifically for Nigerian SS3 students preparing for JAMB, WAEC & NECO.
+            Daily mock quizzes, past-question practice, and topic-by-topic break downs built specifically for Nigerian SS3 students preparing for JAMB, WAEC & NECO.
           </p>
 
           <div className="animate-fadeUp delay-3" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>

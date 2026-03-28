@@ -56,9 +56,9 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="desktop-nav">
-          <NavLink to="/tests"     style={navLinkStyle}>Tests</NavLink>
-          <NavLink to="/quiz"      style={navLinkStyle}>Practice</NavLink>
-          <NavLink to="/topics"    style={navLinkStyle}>Topics</NavLink>
+          {!user?.is_admin && <NavLink to="/tests"     style={navLinkStyle}>Tests</NavLink>}
+          {!user?.is_admin && <NavLink to="/quiz"      style={navLinkStyle}>Practice</NavLink>}
+          {!user?.is_admin && <NavLink to="/topics"    style={navLinkStyle}>Topics</NavLink>}
           <NavLink to="/resources" style={navLinkStyle}>Resources</NavLink>
           {user?.is_admin ? (
             <NavLink to="/admin" style={({ isActive }) => ({
@@ -114,9 +114,7 @@ export default function Navbar() {
           padding: '12px 24px 20px', display: 'flex', flexDirection: 'column', gap: 4,
         }}>
           {[
-            { to: '/tests',     label: 'Tests' },
-            { to: '/quiz',      label: 'Practice' },
-            { to: '/topics',    label: 'Topics' },
+            ...(!user?.is_admin ? [{ to: '/tests', label: 'Tests' }, { to: '/quiz', label: 'Practice' }, { to: '/topics', label: 'Topics' }] : []),
             { to: '/resources', label: 'Resources' },
             ...(user?.is_admin ? [{ to: '/admin', label: <span style={{display:'inline-flex',alignItems:'center',gap:5}}><Settings size={14}/> Admin</span> }] : []),
           ].map(item => (

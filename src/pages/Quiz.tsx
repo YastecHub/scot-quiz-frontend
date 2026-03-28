@@ -61,18 +61,18 @@ export default function Quiz() {
     const isCorrect = optIdx === questions[idx].answer_index;
     const newCorrect = isCorrect ? correct + 1 : correct;
     const newWrong   = isCorrect ? wrong : wrong + 1;
+    const newDone    = done + 1;
     setCorrect(newCorrect);
     setWrong(newWrong);
-    setDone(done + 1);
+    setDone(newDone);
   };
 
   const nextQuestion = () => {
     if (idx + 1 >= questions.length) {
-      // Save score if logged in
       if (user) {
         scoresAPI.save(subject, undefined, correct, done).catch(() => {});
       }
-      setIdx(questions.length); // triggers complete screen
+      setIdx(questions.length);
     } else {
       setIdx(i => i + 1);
       setAnswered(false);

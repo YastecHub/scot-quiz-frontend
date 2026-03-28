@@ -68,7 +68,7 @@ export default function AdminDashboard() {
       <div style={{ marginBottom: 40 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 22, fontWeight: 700, color: 'var(--green-deep)' }}>All Tests</h2>
-          <Link to="/admin/questions" className="btn btn-secondary btn-sm">Manage Question Bank</Link>
+          <Link to="/admin/tests/new" className="btn btn-secondary btn-sm">+ New Test</Link>
         </div>
 
         {loading && <div className="spinner" />}

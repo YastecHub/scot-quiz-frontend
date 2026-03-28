@@ -85,7 +85,7 @@ export default function TakeTest() {
     setCardKey(k => k + 1);
   };
 
-  const answered  = Object.keys(answers).length;
+  const answered  = Object.values(answers).filter(v => v !== null && v !== undefined).length;
   const total     = questions.length;
   const currentQ  = questions[idx];
   const chosen    = currentQ ? (answers[currentQ.id] ?? null) : null;
@@ -111,11 +111,11 @@ export default function TakeTest() {
       {/* Progress bar */}
       <div style={{ width: '100%', maxWidth: 600, marginBottom: 16 }}>
         <div style={{ height: 6, background: 'rgba(10,61,31,0.08)', borderRadius: 10, overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${total>0?(idx/total)*100:0}%`, background: 'linear-gradient(90deg,var(--green-bright),var(--accent))', borderRadius: 10, transition: 'width 0.4s' }} />
+          <div style={{ height: '100%', width: `${total>0?((idx+1)/total)*100:0}%`, background: 'linear-gradient(90deg,var(--green-bright),var(--accent))', borderRadius: 10, transition: 'width 0.4s' }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', marginTop: 4 }}>
           <span>Q {idx + 1} of {total}</span>
-          <span>{Math.round(total>0?(idx/total)*100:0)}%</span>
+          <span>{Math.round(total>0?((idx+1)/total)*100:0)}%</span>
         </div>
       </div>
 

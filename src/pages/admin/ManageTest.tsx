@@ -24,6 +24,9 @@ export default function ManageTest() {
   const [bankSearch,  setBankSearch]  = useState('');
   const [loading,     setLoading]     = useState(true);
   const [showForm,    setShowForm]    = useState(false);
+  const [editingTime, setEditingTime] = useState(false);
+  const [newTimeLimit, setNewTimeLimit] = useState(30);
+  const [savingTime,  setSavingTime]  = useState(false);
 
   // New question form
   const [nSubject,  setNSubject]  = useState('Physics');
@@ -35,6 +38,11 @@ export default function ManageTest() {
   const [nSource,   setNSource]   = useState('');
   const [formError, setFormError] = useState('');
   const [saving,    setSaving]    = useState(false);
+
+  const refreshBank = async (sub = bankSubject) => {
+    const res = await adminAPI.getQuestions(sub);
+    setBankQs(Array.isArray(res.data) ? res.data : []);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -50,12 +58,7 @@ export default function ManageTest() {
     }).finally(() => setLoading(false));
   }, [testId]);
 
-  const refreshBank = async () => {
-    const res = await adminAPI.getQuestions(bankSubject);
-    setBankQs(Array.isArray(res.data) ? res.data : []);
-  };
-
-  useEffect(() => { refreshBank(); }, [bankSubject]);
+  useEffect(() => { refreshBank(bankSubject); }, [bankSubject]);
 
   const inTest = (qId: number) => testQs.some(q => q.id === qId);
 
@@ -74,16 +77,21 @@ export default function ManageTest() {
     e.preventDefault();
     const filled = nOptions.filter(o => o.trim().length > 0);
     if (!nQuestion.trim() || filled.length < 2) { setFormError('Question text and at least 2 options are required.'); return; }
+    if (nAnswer >= filled.length) { setFormError('Please select a valid correct answer.'); return; }
     setSaving(true); setFormError('');
     try {
-      const opts = nOptions.filter(o => o.trim());
-      const res = await adminAPI.createQuestion({ subject: nSubject, topic: nTopic, question: nQuestion, options: opts, answer_index: nAnswer, explanation: nExpl, exam_source: nSource });
-      // Add to test automatically
+      const opts = nOptions.map((o, i) => ({ o, i })).filter(x => x.o.trim());
+      const newAnswerIdx = opts.findIndex(x => x.i === nAnswer);
+      const res = await adminAPI.createQuestion({
+        subject: nSubject, topic: nTopic, question: nQuestion,
+        options: opts.map(x => x.o),
+        answer_index: newAnswerIdx >= 0 ? newAnswerIdx : 0,
+        explanation: nExpl, exam_source: nSource,
+      });
       await adminAPI.addQuestionsToTest(testId, [res.data.id]);
       const [tqRes, bqRes] = await Promise.all([adminAPI.getTestQuestions(testId), adminAPI.getQuestions(bankSubject)]);
-      setTestQs(Array.isArray(tqRes.data) ? tqRes.data : []); 
+      setTestQs(Array.isArray(tqRes.data) ? tqRes.data : []);
       setBankQs(Array.isArray(bqRes.data) ? bqRes.data : []);
-      // Reset form
       setNQuestion(''); setNOptions(['','','','']); setNAnswer(0); setNExpl(''); setNSource(''); setNTopic('');
       setShowForm(false);
     } catch (err) {
@@ -96,6 +104,16 @@ export default function ManageTest() {
     return true;
   });
 
+  const handleSaveTime = async () => {
+    if (!test || newTimeLimit < 1 || newTimeLimit > 300) return;
+    setSavingTime(true);
+    try {
+      const updated = await adminAPI.updateTest(testId, { ...test, time_limit: newTimeLimit });
+      setTest(updated.data);
+      setEditingTime(false);
+    } finally { setSavingTime(false); }
+  };
+
   if (loading) return <div className="spinner" style={{ marginTop: 60 }} />;
   if (!test)   return <div style={{ padding: 40, textAlign: 'center', color: 'var(--wrong)' }}>Test not found.</div>;
 
@@ -107,9 +125,32 @@ export default function ManageTest() {
         <div>
           <div className="section-badge" style={{ marginBottom: 8 }}>⚙ Managing Test</div>
           <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 700, color: 'var(--green-deep)', marginBottom: 4 }}>{test.title}</h1>
-          <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>
-            {test.subject ?? 'Mixed'} · {test.time_limit} min · {testQs.length} question{testQs.length !== 1 ? 's' : ''}
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginTop: 4 }}>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>{test.subject ?? 'Mixed'}</span>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>·</span>
+            {editingTime ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <input
+                  type="number" min={1} max={300}
+                  value={newTimeLimit}
+                  onChange={e => setNewTimeLimit(Math.max(1, Math.min(300, Number(e.target.value))))}
+                  style={{ width: 70, padding: '4px 8px', borderRadius: 8, border: '1.5px solid var(--green-light)', fontFamily: 'inherit', fontSize: 12, fontWeight: 700, outline: 'none' }}
+                  autoFocus
+                />
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>min</span>
+                <button onClick={handleSaveTime} disabled={savingTime} style={{ background: 'var(--green-deep)', color: '#fff', border: 'none', borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                  {savingTime ? '…' : 'Save'}
+                </button>
+                <button onClick={() => setEditingTime(false)} style={{ background: 'transparent', color: 'var(--text-muted)', border: '1px solid rgba(10,61,31,0.15)', borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>Cancel</button>
+              </div>
+            ) : (
+              <button onClick={() => { setNewTimeLimit(test.time_limit); setEditingTime(true); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--green-ghost)', border: '1.5px solid var(--green-pale)', borderRadius: 8, padding: '4px 10px', fontSize: 12, fontWeight: 700, color: 'var(--green-mid)', cursor: 'pointer' }}>
+                ⏱ {test.time_limit} min <span style={{ fontSize: 10, opacity: 0.7 }}>✎ edit</span>
+              </button>
+            )}
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>·</span>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>{testQs.length} question{testQs.length !== 1 ? 's' : ''}</span>
+          </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <Link to={`/admin/tests/${testId}/results`} className="btn btn-secondary btn-sm">View Results</Link>

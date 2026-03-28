@@ -41,7 +41,7 @@ export default function TestReview() {
   const score     = attempt?.score ?? 0;
   const total     = attempt?.total ?? 0;
   const skipped   = questions.filter(q => q.chosen_index === null).length;
-  const wrong     = total - score - skipped;
+  const wrong     = questions.filter(q => q.chosen_index !== null && q.student_correct === 0).length;
   const pctColor  = (p: number) => p >= 70 ? 'var(--correct)' : p >= 50 ? '#ca8a04' : 'var(--wrong)';
   const grade     = pct >= 80 ? <><Trophy size={15} /> Excellent!</> : pct >= 60 ? <><ThumbsUp size={15} /> Good effort!</> : pct >= 40 ? <><Dumbbell size={15} /> Keep going!</> : <><BookMarked size={15} /> More practice needed</>;
 

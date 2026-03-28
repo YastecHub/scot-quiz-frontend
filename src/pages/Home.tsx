@@ -130,7 +130,7 @@ export default function Home() {
       {/* ─── FEATURES ─── */}
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: '80px 24px' }} id="features">
         <div style={{ textAlign: 'center', marginBottom: 52 }}>
-          <div className="section-badge" style={{ marginBottom: 16 }}>✦ Why SCOT Free</div>
+          <div className="section-badge" style={{ marginBottom: 16 }}>✦ Why SCOT Free COMPREHENSIVE CLASSES </div>
           <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 38, fontWeight: 700, color: 'var(--green-deep)', marginBottom: 14 }}>
             Everything You Need to Score High
           </h2>

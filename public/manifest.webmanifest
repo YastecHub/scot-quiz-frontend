@@ -1,0 +1,44 @@
+{
+  "name": "SCOT Free – Exam Prep by EduRaj Consult",
+  "short_name": "SCOT Free",
+  "description": "Ace JAMB, WAEC & NECO with free mock tests, topic drills and study materials.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a3d1f",
+  "theme_color": "#0a3d1f",
+  "categories": ["education"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Practice Quiz",
+      "short_name": "Practice",
+      "description": "Jump straight into a practice quiz",
+      "url": "/quiz",
+      "icons": [{ "src": "/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Tests",
+      "short_name": "Tests",
+      "description": "View your available mock tests",
+      "url": "/tests",
+      "icons": [{ "src": "/icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}

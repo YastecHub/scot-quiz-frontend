@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import InstallPrompt from './components/InstallPrompt';
 
 // Pages
 import Home         from './pages/Home';
@@ -93,6 +94,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
+      <InstallPrompt />
     </>
   );
 }

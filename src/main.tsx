@@ -4,6 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import './styles/global.css';
+import { registerSW } from 'virtual:pwa-register';
+
+// Register service worker — auto-updates silently in the background
+registerSW({
+  onNeedRefresh() {
+    // New content available — auto-reload (or you could prompt the user)
+  },
+  onOfflineReady() {
+    console.log('SCOT Free is ready to work offline.');
+  },
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

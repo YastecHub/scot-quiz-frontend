@@ -79,6 +79,7 @@ export interface Attempt {
 export interface AttemptResult extends Attempt {
   name: string;
   email: string;
+  violations?: number;
 }
 
 export interface ReviewQuestion extends Question {
@@ -149,6 +150,8 @@ export const attemptsAPI = {
     api.post<{ attempt: Attempt; score: number; total: number; pct: number }>(`/attempts/${testId}/submit`, { answers }),
   review: (testId: number) =>
     api.get<{ attempt: Attempt; test: Test; questions: ReviewQuestion[] }>(`/attempts/${testId}/review`),
+  logViolation: (testId: number) =>
+    api.post<{ violations: number }>(`/attempts/${testId}/violation`),
 };
 
 // ── Admin ─────────────────────────────────────────────────────

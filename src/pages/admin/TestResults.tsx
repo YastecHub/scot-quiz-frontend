@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { adminAPI, type Test, type AttemptResult } from '../../api/client';
-import { BarChart2, Medal, Download, Inbox } from 'lucide-react';
+import { BarChart2, Medal, Download, Inbox, ShieldAlert } from 'lucide-react';
 
 export default function TestResults() {
   const { id } = useParams<{ id: string }>();
@@ -100,7 +100,7 @@ export default function TestResults() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ background: 'var(--green-ghost)' }}>
-                      {['Rank', 'Student', 'Email', 'Score', 'Percentage', 'Status', 'Submitted'].map(h => (
+                      {['Rank', 'Student', 'Email', 'Score', 'Percentage', 'Status', 'Flags', 'Submitted'].map(h => (
                         <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: 'var(--green-mid)', whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
@@ -129,6 +129,15 @@ export default function TestResults() {
                               border: `1px solid ${r.status==='completed'?'var(--green-pale)':'#fecaca'}`,
                               borderRadius: 8, padding: '3px 9px', fontSize: 11, fontWeight: 700,
                             }}>{r.status}</span>
+                          </td>
+                          <td style={{ padding: '13px 16px' }}>
+                            {(r.violations ?? 0) > 0 ? (
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '3px 9px', fontSize: 11, fontWeight: 800, color: '#b91c1c' }}>
+                                <ShieldAlert size={11} /> {r.violations}
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>—</span>
+                            )}
                           </td>
                           <td style={{ padding: '13px 16px', fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                             {r.submitted_at ? new Date(r.submitted_at).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}

@@ -9,8 +9,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { attemptsAPI, type QuestionBlind, type Test, type Attempt } from '../api/client';
 import Timer from '../components/Timer';
+import { useAntiCheat } from '../hooks/useAntiCheat';
+import { AlertTriangle, ShieldAlert, Eye } from 'lucide-react';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+const MAX_VIOLATIONS = 3;
 
 export default function TakeTest() {
   const { testId } = useParams<{ testId: string }>();
@@ -27,7 +30,7 @@ export default function TakeTest() {
   const [submitting, setSubmitting] = useState(false);
   const [error,      setError]      = useState('');
   const [cardKey,    setCardKey]    = useState(0);
-  const submitRef = useRef(false); // prevent double submit
+  const submitRef = useRef(false);
 
   useEffect(() => {
     attemptsAPI.getActive(id)
@@ -73,6 +76,11 @@ export default function TakeTest() {
 
   const handleTimeout = useCallback(() => { handleSubmit(true); }, [handleSubmit]);
 
+  const { violations, blurred, warningMsg } = useAntiCheat({
+    testId: id,
+    onAutoSubmit: () => handleSubmit(false),
+  });
+
   const selectAnswer = async (qId: number, optIdx: number) => {
     const newAnswers = { ...answers, [qId]: optIdx };
     setAnswers(newAnswers);
@@ -94,8 +102,70 @@ export default function TakeTest() {
   if (error)   return <div style={{ maxWidth: 500, margin: '60px auto', padding: '0 24px' }}><div className="alert alert-error">{error}</div></div>;
   if (!test || !attempt) return null;
 
+  const remaining = MAX_VIOLATIONS - violations;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px 16px 60px' }}>
+
+      {/* ── BLUR OVERLAY when tab is hidden ── */}
+      {blurred && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 200,
+          background: 'rgba(10,61,31,0.92)',
+          backdropFilter: 'blur(18px)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16,
+        }}>
+          <Eye size={48} color="rgba(255,255,255,0.3)" />
+          <div style={{ fontFamily: 'Fraunces, serif', fontSize: 22, fontWeight: 700, color: '#fff' }}>Return to the test</div>
+          <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>Questions are hidden while you are away.</div>
+        </div>
+      )}
+
+      {/* ── VIOLATION WARNING BANNER ── */}
+      {warningMsg && !blurred && (
+        <div style={{
+          position: 'fixed', top: 72, left: '50%', transform: 'translateX(-50%)',
+          zIndex: 150, width: '100%', maxWidth: 560, padding: '0 16px',
+          animation: 'fadeSlide 0.3s ease',
+        }}>
+          <div style={{
+            background: violations >= MAX_VIOLATIONS ? '#7f1d1d' : '#fef2f2',
+            border: `1.5px solid ${violations >= MAX_VIOLATIONS ? '#dc2626' : '#fecaca'}`,
+            borderRadius: 14, padding: '14px 18px',
+            display: 'flex', alignItems: 'flex-start', gap: 12,
+            boxShadow: '0 8px 32px rgba(220,38,38,0.2)',
+          }}>
+            {violations >= MAX_VIOLATIONS
+              ? <ShieldAlert size={20} color="#fff" style={{ flexShrink: 0, marginTop: 1 }} />
+              : <AlertTriangle size={20} color="#dc2626" style={{ flexShrink: 0, marginTop: 1 }} />}
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: violations >= MAX_VIOLATIONS ? '#fff' : '#b91c1c', marginBottom: 3 }}>
+                {violations >= MAX_VIOLATIONS ? 'Auto-submitting…' : `Warning ${violations}/${MAX_VIOLATIONS}`}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: violations >= MAX_VIOLATIONS ? 'rgba(255,255,255,0.8)' : '#b91c1c', lineHeight: 1.5 }}>
+                {warningMsg}
+                {violations < MAX_VIOLATIONS && (
+                  <span style={{ display: 'block', marginTop: 2, fontWeight: 700 }}>
+                    {remaining} more violation{remaining !== 1 ? 's' : ''} will auto-submit your test.
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── VIOLATION COUNTER in top bar ── */}
+      {violations > 0 && (
+        <div style={{ width: '100%', maxWidth: 600, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '6px 12px' }}>
+            <ShieldAlert size={13} color="#dc2626" />
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#b91c1c' }}>
+              {violations} integrity violation{violations !== 1 ? 's' : ''} recorded — {remaining} remaining before auto-submit
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Top bar: timer + progress */}
       <div style={{ width: '100%', maxWidth: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>

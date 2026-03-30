@@ -8,13 +8,14 @@ import { registerSW } from 'virtual:pwa-register';
 
 // Register service worker — auto-updates silently in the background
 registerSW({
-  onNeedRefresh() {
-    // New content available — auto-reload (or you could prompt the user)
-  },
+  onNeedRefresh() {},
   onOfflineReady() {
     console.log('SCOT Free is ready to work offline.');
   },
 });
+
+// Clear old dismissed flag so install prompt shows again
+localStorage.removeItem('pwa_dismissed');
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -1,34 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Settings, X, Menu, GraduationCap } from 'lucide-react';
+import { Settings, X, Menu, GraduationCap, Download } from 'lucide-react';
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+const isInStandaloneMode =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (window.navigator as any).standalone === true;
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installed, setInstalled] = useState(isInStandaloneMode);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-    setMenuOpen(false);
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', () => { setInstalled(true); setInstallPrompt(null); });
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') setInstalled(true);
+    setInstallPrompt(null);
   };
 
+  const handleLogout = () => { logout(); navigate('/'); setMenuOpen(false); };
+
   const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
-    fontSize: '13px',
-    fontWeight: 600,
+    fontSize: '13px', fontWeight: 600,
     color: isActive ? 'var(--green-mid)' : 'var(--text-muted)',
-    textDecoration: 'none',
-    padding: '8px 16px',
-    borderRadius: '8px',
+    textDecoration: 'none', padding: '8px 16px', borderRadius: '8px',
     background: isActive ? 'var(--green-ghost)' : 'transparent',
     transition: 'all 0.18s',
   });
 
+  const showInstallBtn = !!installPrompt && !installed;
+
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 100,
-      background: 'rgba(247,250,248,0.9)',
+      background: 'rgba(247,250,248,0.95)',
       backdropFilter: 'blur(14px)',
       WebkitBackdropFilter: 'blur(14px)',
       borderBottom: '1px solid rgba(10,61,31,0.08)',
@@ -48,7 +72,7 @@ export default function Navbar() {
             <div style={{ fontFamily: 'Fraunces, serif', fontSize: 19, fontWeight: 700, color: 'var(--green-deep)', lineHeight: 1 }}>
               SCOT COMPREHENSIVE CLASSES
             </div>
-            <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 0, textTransform: 'none', color: 'var(--text-muted)', marginTop: 3 }}>
+            <div style={{ fontSize: 9, fontWeight: 600, color: 'var(--text-muted)', marginTop: 3 }}>
               by EduRaj Consult
             </div>
           </div>
@@ -60,27 +84,35 @@ export default function Navbar() {
           {!user?.is_admin && <NavLink to="/quiz"      style={navLinkStyle}>Practice</NavLink>}
           {!user?.is_admin && <NavLink to="/topics"    style={navLinkStyle}>Topics</NavLink>}
           <NavLink to="/resources" style={navLinkStyle}>Resources</NavLink>
-          {user?.is_admin ? (
+          {user?.is_admin && (
             <NavLink to="/admin" style={({ isActive }) => ({
               ...navLinkStyle({ isActive }),
               background: isActive ? 'var(--green-deep)' : 'rgba(10,61,31,0.07)',
               color: isActive ? '#fff' : 'var(--green-mid)',
               display: 'inline-flex', alignItems: 'center', gap: 5,
             })}><Settings size={13} /> Admin</NavLink>
-          ) : null}
+          )}
 
           <div style={{ width: 1, height: 28, background: 'rgba(10,61,31,0.1)', margin: '0 8px' }} />
+
+          {/* Install button — always visible when browser supports it */}
+          {showInstallBtn && (
+            <button
+              onClick={handleInstall}
+              className="btn btn-secondary btn-sm"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: '1.5px solid var(--green-pale)', color: 'var(--green-mid)' }}
+              title="Install SCOT Free as an app"
+            >
+              <Download size={13} /> Install App
+            </button>
+          )}
 
           {user ? (
             <>
               <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-mid)', padding: '0 8px' }}>
                 Hi, {user.name.split(' ')[0]}
               </span>
-              <button
-                onClick={handleLogout}
-                className="btn btn-ghost btn-sm"
-                style={{ border: '1.5px solid rgba(10,61,31,0.15)' }}
-              >
+              <button onClick={handleLogout} className="btn btn-ghost btn-sm" style={{ border: '1.5px solid rgba(10,61,31,0.15)' }}>
                 Log Out
               </button>
             </>
@@ -98,7 +130,7 @@ export default function Navbar() {
           style={{
             display: 'none', width: 36, height: 36, borderRadius: 8,
             border: '1.5px solid rgba(10,61,31,0.15)', background: '#fff',
-            cursor: 'pointer', fontSize: 18, alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', alignItems: 'center', justifyContent: 'center',
           }}
           className="mobile-menu-btn"
           aria-label="Menu"
@@ -116,7 +148,7 @@ export default function Navbar() {
           {[
             ...(!user?.is_admin ? [{ to: '/tests', label: 'Tests' }, { to: '/quiz', label: 'Practice' }, { to: '/topics', label: 'Topics' }] : []),
             { to: '/resources', label: 'Resources' },
-            ...(user?.is_admin ? [{ to: '/admin', label: <span style={{display:'inline-flex',alignItems:'center',gap:5}}><Settings size={14}/> Admin</span> }] : []),
+            ...(user?.is_admin ? [{ to: '/admin', label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><Settings size={14} /> Admin</span> }] : []),
           ].map(item => (
             <NavLink
               key={item.to}
@@ -132,7 +164,20 @@ export default function Navbar() {
               {item.label}
             </NavLink>
           ))}
+
           <div style={{ height: 1, background: 'rgba(10,61,31,0.08)', margin: '8px 0' }} />
+
+          {/* Install button in mobile menu */}
+          {showInstallBtn && (
+            <button
+              onClick={() => { handleInstall(); setMenuOpen(false); }}
+              className="btn btn-secondary btn-md"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, border: '1.5px solid var(--green-pale)', color: 'var(--green-mid)', marginBottom: 6 }}
+            >
+              <Download size={14} /> Install App
+            </button>
+          )}
+
           {user ? (
             <button onClick={handleLogout} className="btn btn-ghost btn-md" style={{ border: '1.5px solid rgba(10,61,31,0.1)' }}>
               Log Out
